@@ -180,7 +180,7 @@ class Router {
 
     /* Update page title */
     if (matchedRoute.options.title) {
-      document.title = `${matchedRoute.options.title} | LUXE`;
+      document.title = `LUXE`;
     }
 
     /* Update active nav links */
