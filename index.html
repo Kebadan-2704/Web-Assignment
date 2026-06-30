@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="en" data-theme="light"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
@@ -38,6 +38,9 @@
 
   <!-- Supabase JS Library -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- EmailJS Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
 </head>
 <body>
@@ -335,6 +338,200 @@
       <div class="luxe-eam__msg" id="luxe-eam-msg" role="status" aria-live="polite"></div>
     </div>
   </div>
+
+  <!-- ============================================================= -->
+  <!-- EMAILJS INTEGRATION (Early Access + Modal + Newsletter)        -->
+  <!-- ============================================================= -->
+  <script>
+    (function () {
+      // ----- EmailJS configuration -----
+      var EMAILJS_PUBLIC_KEY = "FLJeupFdNP96fqEwy";
+      var EMAILJS_SERVICE_ID = "service_24mmvak";
+      var EMAILJS_TEMPLATE_ID = "template_azhcjwl";
+      // If you create a dedicated newsletter template, set its ID here:
+      var EMAILJS_NEWSLETTER_TEMPLATE_ID = "template_azhcjwl";
+
+      // Initialize EmailJS (v4 syntax)
+      if (window.emailjs && typeof emailjs.init === "function") {
+        emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+      }
+
+      // ----- Helpers -----
+      function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+
+      function setMsg(el, text, type) {
+        if (!el) return;
+        el.textContent = text;
+        el.classList.remove("is-error", "is-success");
+        if (type) el.classList.add("is-" + type);
+      }
+
+      function lockButton(btn, locked, busyLabel) {
+        if (!btn) return;
+        if (locked) {
+          btn.dataset.originalLabel = btn.dataset.originalLabel || btn.textContent;
+          btn.disabled = true;
+          if (busyLabel) btn.textContent = busyLabel;
+        } else {
+          btn.disabled = false;
+          if (btn.dataset.originalLabel) btn.textContent = btn.dataset.originalLabel;
+        }
+      }
+
+      // =========================================================
+      // 1) EARLY ACCESS (inline section form)
+      // =========================================================
+      var eaForm = document.getElementById("luxe-ea-form");
+      if (eaForm) {
+        eaForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          var section = document.getElementById("early-access");
+          var nameInput = document.getElementById("luxe-ea-name");
+          var emailInput = document.getElementById("luxe-ea-email");
+          var msg = document.getElementById("luxe-ea-msg");
+          var submitBtn = eaForm.querySelector(".luxe-ea__btn");
+
+          var name = nameInput ? nameInput.value.trim() : "";
+          var email = emailInput ? emailInput.value.trim() : "";
+
+          setMsg(msg, "");
+
+          if (!name) {
+            setMsg(msg, "Please enter your name.", "error");
+            return;
+          }
+          if (!isValidEmail(email)) {
+            setMsg(msg, "Please enter a valid email address.", "error");
+            return;
+          }
+
+          lockButton(submitBtn, true, "Sending…");
+
+          emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+            user_name: name,
+            email: email
+          })
+          .then(function () {
+            if (section) section.classList.add("luxe-ea--done");
+            setMsg(
+              msg,
+              "🎉 You're on the list, " + name + "! Check your inbox for your exclusive LUXE invitation.",
+              "success"
+            );
+            eaForm.reset();
+          })
+          .catch(function (error) {
+            console.error("EmailJS (early access) error:", error);
+            setMsg(msg, "Something went wrong. Please try again.", "error");
+          })
+          .finally(function () {
+            lockButton(submitBtn, false);
+          });
+        });
+      }
+
+      // =========================================================
+      // 2) EARLY ACCESS GATE MODAL
+      // =========================================================
+      var modalForm = document.getElementById("luxe-eam-form");
+      if (modalForm) {
+        modalForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          var modal = document.getElementById("luxe-eam-modal");
+          var nameInput = document.getElementById("luxe-eam-name");
+          var emailInput = document.getElementById("luxe-eam-email");
+          var msg = document.getElementById("luxe-eam-msg");
+          var submitBtn = modalForm.querySelector(".luxe-eam__btn");
+          var closeBtn = document.getElementById("luxe-eam-close");
+
+          var name = nameInput ? nameInput.value.trim() : "";
+          var email = emailInput ? emailInput.value.trim() : "";
+
+          setMsg(msg, "");
+
+          if (!name) {
+            setMsg(msg, "Please enter your name.", "error");
+            return;
+          }
+          if (!isValidEmail(email)) {
+            setMsg(msg, "Please enter a valid email address.", "error");
+            return;
+          }
+
+          lockButton(submitBtn, true, "Sending…");
+
+          emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+            user_name: name,
+            email: email
+          })
+          .then(function () {
+            if (modal) modal.classList.add("luxe-eam--done");
+            setMsg(msg, "🎉 You're on the list, " + name + "! Check your inbox.", "success");
+            modalForm.reset();
+            setTimeout(function () {
+              if (closeBtn) {
+                closeBtn.click();
+              } else if (modal) {
+                modal.classList.remove("is-open", "luxe-eam--open");
+              }
+            }, 2500);
+          })
+          .catch(function (error) {
+            console.error("EmailJS (modal) error:", error);
+            setMsg(msg, "Unable to send invitation email.", "error");
+          })
+          .finally(function () {
+            lockButton(submitBtn, false);
+          });
+        });
+      }
+
+      // =========================================================
+      // 3) NEWSLETTER
+      // =========================================================
+      var nlForm = document.getElementById("luxe-nl-form");
+      if (nlForm) {
+        nlForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          var emailInput = document.getElementById("luxe-nl-email");
+          var msg = document.getElementById("luxe-nl-msg");
+          var submitBtn = nlForm.querySelector(".luxe-nl__btn");
+
+          var email = emailInput ? emailInput.value.trim() : "";
+
+          setMsg(msg, "");
+
+          if (!isValidEmail(email)) {
+            setMsg(msg, "Please enter a valid email address.", "error");
+            return;
+          }
+
+          lockButton(submitBtn, true, "Subscribing…");
+
+          emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_NEWSLETTER_TEMPLATE_ID, {
+            user_name: "Subscriber",
+            email: email
+          })
+          .then(function () {
+            setMsg(msg, "🎉 You're subscribed! Watch your inbox for LUXE updates.", "success");
+            nlForm.reset();
+          })
+          .catch(function (error) {
+            console.error("EmailJS (newsletter) error:", error);
+            setMsg(msg, "Something went wrong. Please try again.", "error");
+          })
+          .finally(function () {
+            lockButton(submitBtn, false);
+          });
+        });
+      }
+    })();
+  </script>
 
   <!-- Inline Scripts (extracted to external file) -->
   <script src="js/inline.js"></script>
