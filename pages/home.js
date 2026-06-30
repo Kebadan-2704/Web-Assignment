@@ -59,7 +59,7 @@ export async function renderHome() {
         <div class="grid grid--auto-fit stagger-children" style="--min-col: 200px;">
           ${categories.map(cat => `
             <a href="/shop?category=${encodeURIComponent(cat.name)}" class="category-card">
-              <div class="category-card__image" style="background: ${cat.image ? `url('${cat.image}') center/cover no-repeat` : cat.gradient}; width: 100%; height: 100%;"></div>
+              <div class="category-card__image" role="img" aria-label="${cat.name} category" style="background: ${cat.image ? `url('${cat.image}') center/cover no-repeat` : cat.gradient}; width: 100%; height: 100%;"></div>
               <div class="category-card__overlay">
                 <h3 class="category-card__name">${cat.name}</h3>
                 <span class="category-card__count">${cat.productCount} Products</span>
@@ -199,19 +199,6 @@ export async function renderHome() {
       </div>
     </section>
 
-    <!-- Newsletter -->
-    <section class="section" aria-labelledby="newsletter-heading">
-      <div class="container">
-        <div class="newsletter animate-on-scroll">
-          <h3 id="newsletter-heading">Stay in the Loop</h3>
-          <p>Subscribe to our newsletter for exclusive deals, new arrivals, and style inspiration.</p>
-          <form class="newsletter__form" id="newsletter-form">
-            <input type="email" placeholder="Enter your email address" required aria-label="Email address" />
-            <button type="submit" class="btn btn--gold">Subscribe</button>
-          </form>
-        </div>
-      </div>
-    </section>
 
     ${recentlyViewed.length > 0 ? `
     <!-- Recently Viewed -->
@@ -233,7 +220,6 @@ export async function renderHome() {
   setTimeout(() => {
     _initHeroCarousel(banners.length);
     _initFlashCountdown();
-    _initNewsletterForm();
     
     /* Bind product card events */
     const pageContent = document.getElementById('page-content');
@@ -325,19 +311,3 @@ function _initFlashCountdown() {
   update();
 }
 
-/* ── Newsletter Form ── */
-function _initNewsletterForm() {
-  const form = document.getElementById('newsletter-form');
-  if (!form) return;
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = form.querySelector('input').value;
-    if (email) {
-      import('../js/ui.js').then(({ Toast }) => {
-        Toast.success('Subscribed!', `You'll receive updates at ${email}`);
-      });
-      form.reset();
-    }
-  });
-}

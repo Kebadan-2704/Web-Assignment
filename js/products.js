@@ -175,7 +175,7 @@ class ProductManager {
     return `
       <article class="product-card" data-product-id="${product.id}">
         <div class="product-card__image">
-          <div class="product-card__img" style="${bgStyle} width: 100%; height: 100%;"></div>
+          <div class="product-card__img" role="img" aria-label="${product.name}" style="${bgStyle} width: 100%; height: 100%;"></div>
           
           ${product.badges?.length ? `
             <div class="product-card__badges">
@@ -336,11 +336,9 @@ class ProductManager {
    * Show quick view modal
    */
   _showQuickView(product) {
-    const { Modal } = require('./ui.js');
-    const discount = calculateDiscount(product.price, product.salePrice);
-    const gradient = product.gradient || generateProductGradient(product.category, product.id);
-
     import('./ui.js').then(({ Modal }) => {
+      const discount = calculateDiscount(product.price, product.salePrice);
+      const gradient = product.gradient || generateProductGradient(product.category, product.id);
       Modal.show({
         title: '',
         size: 'lg',

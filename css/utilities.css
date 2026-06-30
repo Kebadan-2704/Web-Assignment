@@ -32,6 +32,14 @@
 .inline-block { display: inline-block; }
 .inline-flex { display: inline-flex; }
 
+/* Responsive Visibility */
+@media (max-width: 991px) {
+  .hide-on-mobile { display: none !important; }
+}
+@media (min-width: 992px) {
+  .hide-on-desktop { display: none !important; }
+}
+
 /* ── Text Alignment ── */
 .text-start { text-align: start; }
 .text-center { text-align: center; }

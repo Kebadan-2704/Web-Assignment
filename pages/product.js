@@ -32,7 +32,7 @@ export async function renderProduct({ params }) {
       <div class="product-detail-layout" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-10); align-items: start;">
         <!-- Images -->
         <div>
-          <div class="image-zoom" style="background: ${imageBg}; border-radius: var(--radius-2xl); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-family: var(--font-family-display); font-size: var(--fs-4xl); color: rgba(255,255,255,0.3); font-weight: var(--fw-bold);">
+          <div class="image-zoom" role="img" aria-label="${product.name}" style="background: ${imageBg}; border-radius: var(--radius-2xl); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-family: var(--font-family-display); font-size: var(--fs-4xl); color: rgba(255,255,255,0.3); font-weight: var(--fw-bold);">
             ${hasImage ? '' : 'LUXE'}
           </div>
           ${product.colors?.length ? `
