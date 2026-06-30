@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "title": "Summer Collection 2026",
+    "subtitle": "Discover the latest trends in premium fashion",
+    "cta": "Shop Now",
+    "ctaLink": "/shop",
+    "image": "/assets/images/hero_banner_1782780915137.png",
+    "gradient": "linear-gradient(135deg, #1e1b4b 0%, #312e81 30%, #4338ca 60%, #6366f1 100%)"
+  },
+  {
+    "id": 2,
+    "title": "Up to 40% Off Electronics",
+    "subtitle": "Premium audio and smart wearables at unbeatable prices",
+    "cta": "View Deals",
+    "ctaLink": "/shop?category=Electronics",
+    "image": "/assets/images/banner_2_1782781254676.png",
+    "gradient": "linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)"
+  },
+  {
+    "id": 3,
+    "title": "New Home Collection",
+    "subtitle": "Transform your space with artisan-crafted decor",
+    "cta": "Explore",
+    "ctaLink": "/shop?category=Home",
+    "image": "/assets/images/banner_3_1782781266823.png",
+    "gradient": "linear-gradient(135deg, #2d1b69 0%, #11998e 100%)"
+  },
+  {
+    "id": 4,
+    "title": "Beauty Essentials",
+    "subtitle": "Organic skincare for radiant, healthy skin",
+    "cta": "Shop Beauty",
+    "ctaLink": "/shop?category=Beauty",
+    "image": "/assets/images/banner_4_1782781276962.png",
+    "gradient": "linear-gradient(135deg, #c31432 0%, #240b36 100%)"
+  },
+  {
+    "id": 5,
+    "title": "Free Shipping Over $100",
+    "subtitle": "Use code WELCOME10 for 10% off your first order",
+    "cta": "Start Shopping",
+    "ctaLink": "/shop",
+    "image": "/assets/images/banner_5_1782781286777.png",
+    "gradient": "linear-gradient(135deg, #141e30 0%, #243b55 100%)"
+  }
+]

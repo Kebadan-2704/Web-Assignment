@@ -1,0 +1,261 @@
+/* ============================================
+   TYPOGRAPHY
+   Fluid type scale, heading hierarchy, text styles
+   ============================================ */
+
+/* ── Google Fonts Import ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ── Heading Hierarchy ── */
+h1, .h1 {
+  font-family: var(--font-family-display);
+  font-size: var(--fs-5xl);
+  font-weight: var(--fw-extrabold);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+  color: var(--text-primary);
+}
+
+h2, .h2 {
+  font-family: var(--font-family-display);
+  font-size: var(--fs-4xl);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+  color: var(--text-primary);
+}
+
+h3, .h3 {
+  font-family: var(--font-family-display);
+  font-size: var(--fs-3xl);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-snug);
+  color: var(--text-primary);
+}
+
+h4, .h4 {
+  font-family: var(--font-family-display);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-snug);
+  color: var(--text-primary);
+}
+
+h5, .h5 {
+  font-family: var(--font-family-sans);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-snug);
+  color: var(--text-primary);
+}
+
+h6, .h6 {
+  font-family: var(--font-family-sans);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-normal);
+  color: var(--text-primary);
+}
+
+/* ── Body Text ── */
+.text-body {
+  font-size: var(--fs-base);
+  line-height: var(--lh-normal);
+  color: var(--text-primary);
+}
+
+.text-body-lg {
+  font-size: var(--fs-md);
+  line-height: var(--lh-relaxed);
+  color: var(--text-secondary);
+}
+
+/* Lead / Hero Text */
+.text-lead {
+  font-size: var(--fs-lg);
+  line-height: var(--lh-relaxed);
+  color: var(--text-secondary);
+  font-weight: var(--fw-regular);
+}
+
+/* Small / Caption */
+.text-sm {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+}
+
+.text-xs {
+  font-size: var(--fs-xs);
+  line-height: var(--lh-normal);
+}
+
+.text-caption {
+  font-size: var(--fs-xs);
+  line-height: var(--lh-normal);
+  color: var(--text-tertiary);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  font-weight: var(--fw-semibold);
+}
+
+/* ── Overline / Label ── */
+.text-overline {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-widest);
+  color: var(--color-primary-500);
+}
+
+.text-label {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--text-secondary);
+}
+
+/* ── Display Text ── */
+.text-display {
+  font-family: var(--font-family-display);
+  font-size: clamp(3rem, 2.5rem + 3vw, 5rem);
+  font-weight: var(--fw-extrabold);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── Paragraph Spacing ── */
+p + p {
+  margin-block-start: var(--space-4);
+}
+
+/* ── Inline Styles ── */
+strong, b {
+  font-weight: var(--fw-semibold);
+}
+
+em, i {
+  font-style: italic;
+}
+
+small {
+  font-size: var(--fs-sm);
+}
+
+mark {
+  background: var(--color-secondary-200);
+  color: var(--color-secondary-900);
+  padding-inline: var(--space-1);
+  border-radius: var(--radius-xs);
+}
+
+code {
+  font-family: var(--font-family-mono);
+  font-size: 0.9em;
+  background: var(--surface-overlay);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+/* ── Links ── */
+.link {
+  color: var(--text-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color var(--duration-fast) var(--ease-default);
+}
+
+.link:hover {
+  color: var(--text-link-hover);
+}
+
+/* ── Blockquote ── */
+blockquote {
+  padding-inline-start: var(--space-6);
+  border-inline-start: 3px solid var(--color-primary-400);
+  font-style: italic;
+  color: var(--text-secondary);
+  font-size: var(--fs-md);
+  line-height: var(--lh-relaxed);
+}
+
+/* ── Lists (when styled) ── */
+.list-styled {
+  padding-inline-start: var(--space-6);
+}
+
+.list-styled li {
+  position: relative;
+  padding-inline-start: var(--space-2);
+  margin-block-end: var(--space-2);
+}
+
+.list-styled li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: calc(-1 * var(--space-4));
+  top: 0.6em;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-500);
+}
+
+/* ── Price Typography ── */
+.price {
+  font-family: var(--font-family-display);
+  font-weight: var(--fw-bold);
+  color: var(--text-primary);
+}
+
+.price--sale {
+  color: var(--color-error-600);
+}
+
+.price--original {
+  text-decoration: line-through;
+  color: var(--text-tertiary);
+  font-weight: var(--fw-regular);
+}
+
+.price--large {
+  font-size: var(--fs-2xl);
+}
+
+/* ── Gradient Text Utility ── */
+.text-gradient {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-gold {
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── Truncation ── */
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.text-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta name="description" content="LUXE - Premium E-Commerce Shopping Experience. Discover the finest fashion, electronics, home goods, beauty products, and sports equipment.">
+  <meta name="theme-color" content="#ffffff">
+  <title>LUXE | Premium Shopping Experience</title>
+
+  <!-- Preconnect to Google Fonts for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS Foundation -->
+  <link rel="stylesheet" href="css/variables.css?v=2">
+  <link rel="stylesheet" href="css/reset.css?v=2">
+  <link rel="stylesheet" href="css/typography.css?v=2">
+  <link rel="stylesheet" href="css/themes.css?v=2">
+  <link rel="stylesheet" href="css/layout.css?v=2">
+  <link rel="stylesheet" href="css/animations.css?v=2">
+  <link rel="stylesheet" href="css/components.css?v=2">
+  <link rel="stylesheet" href="css/utilities.css?v=2">
+  <link rel="stylesheet" href="css/responsive.css?v=2">
+
+  <!-- Supabase JS Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Inline style for critical rendering (splash screen) -->
+  <style>
+    #splash-screen {
+      position: fixed; inset: 0; background: #ffffff; z-index: 9999;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      transition: opacity 0.5s ease;
+    }
+    html[data-theme="dark"] #splash-screen { background: #0b0f19; }
+    .splash-logo {
+      font-family: 'Outfit', sans-serif; font-size: 3rem; font-weight: 900;
+      background: linear-gradient(135deg, #d4af37 0%, #aa7c11 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem; animation: pulse 1.5s infinite alternate;
+    }
+    @keyframes pulse { from { opacity: 0.7; transform: scale(0.98); } to { opacity: 1; transform: scale(1.02); } }
+  </style>
+</head>
+<body>
+  <!-- Splash Screen -->
+  <div id="splash-screen" aria-hidden="true">
+    <div class="splash-logo">LUXE</div>
+    <div style="width: 40px; height: 4px; background: var(--border-default, #e2e8f0); border-radius: 2px; overflow: hidden;">
+      <div style="width: 50%; height: 100%; background: #d4af37; animation: load 1s infinite ease-in-out alternate;"></div>
+    </div>
+  </div>
+  <style>@keyframes load { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }</style>
+
+  <!-- Global Overlay -->
+  <div class="overlay"></div>
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header__inner">
+      <!-- Mobile Menu Toggle -->
+      <button class="header__icon-btn hide-on-desktop" id="mobile-menu-toggle" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+
+      <!-- Logo -->
+      <a href="/" class="logo" data-nav-link aria-label="Go to homepage">
+        <div class="logo__icon">L</div>
+        <div class="logo__text">LUXE</div>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="nav-main hide-on-mobile" aria-label="Main navigation">
+        <div class="nav-main__item">
+          <a href="/shop" class="nav-main__link" data-nav-link>Shop</a>
+        </div>
+        <div class="nav-main__item">
+          <a href="/shop?category=Fashion" class="nav-main__link">Fashion</a>
+          <!-- Mega Menu Example -->
+          <div class="mega-menu">
+            <div class="mega-menu__inner container">
+              <div class="mega-menu__column">
+                <h4 class="mega-menu__title">Clothing</h4>
+                <a href="/shop?q=Jacket" class="mega-menu__link">Jackets & Coats</a>
+                <a href="/shop?q=Shirt" class="mega-menu__link">Shirts & Blouses</a>
+                <a href="/shop?q=Dress" class="mega-menu__link">Dresses</a>
+                <a href="/shop?q=Pants" class="mega-menu__link">Trousers & Jeans</a>
+              </div>
+              <div class="mega-menu__column">
+                <h4 class="mega-menu__title">Accessories</h4>
+                <a href="/shop?q=Bag" class="mega-menu__link">Bags & Purses</a>
+                <a href="/shop?q=Watch" class="mega-menu__link">Watches</a>
+                <a href="/shop?q=Sunglasses" class="mega-menu__link">Sunglasses</a>
+                <a href="/shop?q=Jewelry" class="mega-menu__link">Jewelry</a>
+              </div>
+              <div class="mega-menu__column">
+                <div style="background: linear-gradient(135deg, #667eea, #764ba2); height: 100%; border-radius: var(--radius-xl); padding: var(--space-4); color: white; display: flex; flex-direction: column; justify-content: flex-end;">
+                  <h4 style="color: white; margin-bottom: var(--space-2);">Summer Sale</h4>
+                  <p style="font-size: var(--fs-sm); margin-bottom: var(--space-3); color: rgba(255,255,255,0.8);">Up to 40% off premium fashion.</p>
+                  <a href="/shop?sort=sale" class="btn btn--gold btn--sm" style="align-self: flex-start;">Shop Now</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="nav-main__item"><a href="/shop?category=Electronics" class="nav-main__link">Electronics</a></div>
+        <div class="nav-main__item"><a href="/shop?category=Home" class="nav-main__link">Home</a></div>
+        <div class="nav-main__item"><a href="/collections" class="nav-main__link" data-nav-link>Collections</a></div>
+      </nav>
+
+      <!-- Right Actions -->
+      <div class="header__actions">
+        <!-- Search Bar -->
+        <div class="search-bar hide-on-mobile">
+          <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" class="search-bar__input" id="search-input" placeholder="Search products, brands..." aria-label="Search products" autocomplete="off">
+          
+          <!-- Search Dropdown -->
+          <div class="search-dropdown" id="search-dropdown" role="listbox">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Search Icon (Mobile) -->
+        <button class="header__icon-btn hide-on-desktop" aria-label="Search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+
+        <!-- Theme Toggle -->
+        <button class="header__icon-btn" data-theme-toggle aria-label="Toggle dark mode">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          </span>
+        </button>
+
+        <!-- Account -->
+        <div class="dropdown hide-on-mobile">
+          <button class="header__icon-btn" id="account-toggle" data-dropdown-toggle aria-label="Account menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </button>
+          <div class="dropdown__menu dropdown__menu--right" id="account-dropdown-menu">
+            <!-- Populated by JS based on auth state -->
+          </div>
+        </div>
+
+        <!-- Wishlist -->
+        <a href="/wishlist" class="header__icon-btn hide-on-mobile" data-nav-link aria-label="Wishlist">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          <span class="badge-count" data-wishlist-count></span>
+        </a>
+
+        <!-- Cart -->
+        <a href="/cart" class="header__icon-btn" data-nav-link aria-label="Shopping cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          <span class="badge-count" data-cart-count></span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu Drawer -->
+  <div class="mobile-drawer" id="mobile-menu" aria-label="Mobile navigation">
+    <div class="mobile-drawer__header">
+      <div class="logo">
+        <div class="logo__icon">L</div>
+        <div class="logo__text">LUXE</div>
+      </div>
+      <button class="header__icon-btn" onclick="document.getElementById('mobile-menu-toggle').click()" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="mobile-drawer__content">
+      <!-- Auth Section -->
+      <div id="mobile-auth-section"></div>
+
+      <nav>
+        <a href="/" class="mobile-drawer__link" data-nav-link>Home</a>
+        <a href="/shop" class="mobile-drawer__link" data-nav-link>Shop All</a>
+        <a href="/shop?category=Fashion" class="mobile-drawer__link">Fashion</a>
+        <a href="/shop?category=Electronics" class="mobile-drawer__link">Electronics</a>
+        <a href="/shop?category=Home" class="mobile-drawer__link">Home & Living</a>
+        <a href="/shop?category=Beauty" class="mobile-drawer__link">Beauty</a>
+        <a href="/collections" class="mobile-drawer__link" data-nav-link>Collections</a>
+      </nav>
+      
+      <div style="margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid var(--border-default);">
+        <a href="/wishlist" class="mobile-drawer__link" data-nav-link>
+          <svg style="width: 20px; height: 20px; margin-right: 12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          Wishlist
+        </a>
+        <a href="/compare" class="mobile-drawer__link" data-nav-link>
+          <svg style="width: 20px; height: 20px; margin-right: 12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+          Compare Products
+        </a>
+        <a href="/contact" class="mobile-drawer__link" data-nav-link>
+          <svg style="width: 20px; height: 20px; margin-right: 12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          Help & Contact
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Area (Injected by Router) -->
+  <main id="page-content" class="page-transition">
+    <!-- View content will be injected here -->
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <!-- Brand -->
+        <div class="footer__brand">
+          <div class="logo" style="margin-bottom: var(--space-4);">
+            <div class="logo__icon">L</div>
+            <div class="logo__text">LUXE</div>
+          </div>
+          <p class="text-sm text-secondary" style="margin-bottom: var(--space-6); line-height: var(--lh-relaxed);">
+            Elevating your lifestyle with premium products, impeccable design, and unparalleled quality.
+          </p>
+          <div class="footer__social">
+            <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+            <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg></a>
+            <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+            <a href="#" aria-label="Pinterest"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.236 2.636 7.855 6.356 9.312-.088-.791-.167-2.005.035-2.868.181-.78 1.172-4.97 1.172-4.97s-.299-.598-.299-1.482c0-1.388.806-2.425 1.808-2.425.853 0 1.265.64 1.265 1.408 0 .858-.546 2.14-.828 3.33-.236.995.5 1.807 1.48 1.807 1.778 0 3.144-1.874 3.144-4.58 0-2.393-1.72-4.068-4.177-4.068-2.845 0-4.515 2.135-4.515 4.34 0 .859.331 1.781.745 2.281a.3.3 0 0 1 .069.288l-.278 1.133c-.044.183-.145.222-.335.134-1.249-.581-2.03-2.407-2.03-3.874 0-3.154 2.292-6.052 6.608-6.052 3.469 0 6.165 2.473 6.165 5.776 0 3.447-2.173 6.22-5.19 6.22-1.013 0-1.965-.527-2.291-1.148l-.623 2.378c-.226.869-.835 1.958-1.244 2.621.937.29 1.931.446 2.962.446 5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg></a>
+          </div>
+        </div>
+
+        <!-- Links -->
+        <div class="footer__links">
+          <h4 class="footer__title">Shop</h4>
+          <ul>
+            <li><a href="/shop?category=Fashion">Fashion & Apparel</a></li>
+            <li><a href="/shop?category=Electronics">Premium Tech</a></li>
+            <li><a href="/shop?category=Home">Home & Living</a></li>
+            <li><a href="/shop?category=Beauty">Beauty & Skincare</a></li>
+            <li><a href="/collections">Curated Collections</a></li>
+          </ul>
+        </div>
+        <div class="footer__links">
+          <h4 class="footer__title">Support</h4>
+          <ul>
+            <li><a href="/contact">Contact Us</a></li>
+            <li><a href="/faq">FAQ & Help Center</a></li>
+            <li><a href="/track-order">Track Your Order</a></li>
+            <li><a href="/terms">Returns & Exchanges</a></li>
+            <li><a href="/privacy">Privacy Policy</a></li>
+          </ul>
+        </div>
+        <div class="footer__links">
+          <h4 class="footer__title">Company</h4>
+          <ul>
+            <li><a href="/about">About LUXE</a></li>
+            <li><a href="/blog">The Journal</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Sustainability</a></li>
+            <li><a href="#">Press & Media</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <p>&copy; <span id="current-year"></span> LUXE Premium E-Commerce. All rights reserved.</p>
+        <div style="display: flex; gap: var(--space-4); align-items: center; color: var(--text-tertiary);">
+          <svg style="width: 32px; height: 20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          <span style="font-size: var(--fs-xs); font-weight: var(--fw-bold);">SECURE PAYMENTS</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg>
+  </button>
+
+  <!-- Application Script (ES Module) -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

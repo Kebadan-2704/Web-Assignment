@@ -1,0 +1,53 @@
+[
+  {
+    "id": "demo",
+    "name": "Alex Johnson",
+    "email": "demo@luxe.com",
+    "password": "Demo@123",
+    "phone": "+1 (555) 123-4567",
+    "avatar": null,
+    "addresses": [
+      {
+        "id": "addr-1",
+        "label": "Home",
+        "name": "Alex Johnson",
+        "street": "123 Fashion Avenue",
+        "city": "New York",
+        "state": "NY",
+        "zip": "10001",
+        "country": "United States",
+        "isDefault": true
+      },
+      {
+        "id": "addr-2",
+        "label": "Office",
+        "name": "Alex Johnson",
+        "street": "456 Tech Boulevard",
+        "city": "San Francisco",
+        "state": "CA",
+        "zip": "94105",
+        "country": "United States",
+        "isDefault": false
+      }
+    ],
+    "orders": [
+      {
+        "id": "LX-ORD001",
+        "date": "2026-06-25T10:30:00Z",
+        "status": "delivered",
+        "total": 249.99,
+        "items": 3,
+        "tracking": "1Z999AA10123456784"
+      },
+      {
+        "id": "LX-ORD002",
+        "date": "2026-06-28T14:15:00Z",
+        "status": "shipping",
+        "total": 189.50,
+        "items": 2,
+        "tracking": "1Z999AA10123456785"
+      }
+    ],
+    "createdAt": "2026-05-01T00:00:00Z"
+  }
+]

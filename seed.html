@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Supabase Data Seeder | LUXE</title>
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/typography.css">
+  <link rel="stylesheet" href="css/utilities.css">
+  <link rel="stylesheet" href="css/components.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { background: var(--bg-primary); color: var(--text-primary); padding: var(--space-8); }
+    .container { max-width: 600px; margin: 0 auto; background: var(--bg-secondary); padding: var(--space-6); border-radius: var(--radius-lg); border: 1px solid var(--border-default); }
+    .log { background: #000; color: #0f0; font-family: monospace; padding: var(--space-4); border-radius: var(--radius-md); height: 300px; overflow-y: auto; margin-top: var(--space-4); white-space: pre-wrap; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 style="margin-bottom: var(--space-2);">Database Seeder</h1>
+    <p class="text-secondary" style="margin-bottom: var(--space-6);">Click the button below to upload the local JSON products and categories directly to your Supabase database.</p>
+    
+    <button id="seed-btn" class="btn btn--primary" style="width: 100%;">🚀 Seed Supabase Database</button>
+    
+    <div class="log" id="log-output">Waiting to start...</div>
+  </div>
+
+  <script type="module">
+    import { CONFIG } from './js/config.js';
+    import { supabase } from './js/supabase.js';
+
+    const logOutput = document.getElementById('log-output');
+    const seedBtn = document.getElementById('seed-btn');
+
+    function log(message) {
+      console.log(message);
+      logOutput.innerHTML += `\n[${new Date().toLocaleTimeString()}] ${message}`;
+      logOutput.scrollTop = logOutput.scrollHeight;
+    }
+
+    seedBtn.addEventListener('click', async () => {
+      seedBtn.disabled = true;
+      seedBtn.textContent = "Seeding Database...";
+      log("Starting seed process...");
+
+      try {
+        log("Fetching local JSON data...");
+        const [productsRes, categoriesRes] = await Promise.all([
+          fetch('./data/products.json'),
+          fetch('./data/categories.json')
+        ]);
+        
+        const products = await productsRes.json();
+        const categories = await categoriesRes.json();
+        log(`Found ${products.length} products and ${categories.length} categories.`);
+
+        log("Checking Supabase connection...");
+        const { error: testError } = await supabase.from('categories').select('id').limit(1);
+        if (testError) {
+          throw new Error(`Supabase connection failed. Did you create the tables? Error: ${testError.message}`);
+        }
+
+        log("Clearing existing Supabase data (optional)...");
+        // We won't clear to be safe, just insert. Or maybe clear? Let's just insert.
+        // Actually, if they ran it twice, it will duplicate. Let's just insert.
+
+        // Helper to lowercase all keys in an object to avoid Postgres case-sensitivity issues
+        const lowerCaseKeys = (obj) => {
+          return Object.keys(obj).reduce((acc, key) => {
+            acc[key.toLowerCase()] = obj[key];
+            return acc;
+          }, {});
+        };
+
+        const dbCategories = categories.map(lowerCaseKeys);
+        const dbProducts = products.map(lowerCaseKeys);
+
+        log("Uploading Categories to Supabase...");
+        const { error: catError } = await supabase.from('categories').upsert(dbCategories);
+        if (catError) throw new Error(`Category upload failed: ${catError.message}`);
+        log("✅ Categories uploaded successfully!");
+
+        log("Uploading Products to Supabase...");
+        const { error: prodError } = await supabase.from('products').upsert(dbProducts);
+        if (prodError) throw new Error(`Product upload failed: ${prodError.message}`);
+        log("✅ Products uploaded successfully!");
+
+        log("\n🎉 SEED COMPLETE! You can now enable USE_SUPABASE_DB in js/config.js!");
+      } catch (err) {
+        log(`\n❌ ERROR: ${err.message}`);
+      } finally {
+        seedBtn.disabled = false;
+        seedBtn.textContent = "Run Seed Again";
+      }
+    });
+  </script>
+</body>
+</html>
