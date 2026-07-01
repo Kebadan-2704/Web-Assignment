@@ -13,8 +13,8 @@ export function formatCurrency(amount) {
   return new Intl.NumberFormat(CONFIG.LOCALE, {
     style: 'currency',
     currency: CONFIG.CURRENCY,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
   }).format(amount);
 }
 

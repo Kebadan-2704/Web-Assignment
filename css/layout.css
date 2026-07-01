@@ -360,11 +360,15 @@
 .overlay {
   position: fixed;
   inset: 0;
+  width: 100%;              /* stay within the layout width, not 100vw */
+  height: 100%;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);   /* Safari/iOS support */
   z-index: calc(var(--z-drawer) - 1);
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;     /* don't intercept taps while hidden */
   transition: opacity var(--duration-normal) var(--ease-default),
               visibility var(--duration-normal) var(--ease-default);
 }
@@ -372,6 +376,7 @@
 .overlay--visible {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
 }
 
 /* ── Search Bar ── */

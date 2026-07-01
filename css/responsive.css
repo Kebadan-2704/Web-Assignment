@@ -497,3 +497,92 @@
     display: none;
   }
 }
+/* ── Mobile overflow fix: stack desktop-first grids ── */
+@media (max-width: 767px) {
+  /* Base grid utilities forgot their mobile (1-col) default */
+  .grid--2,
+  .grid--3,
+  .grid--4,
+  .grid--5 {
+    grid-template-columns: 1fr;
+  }
+
+  /* Feature + testimonial cards must never exceed the screen */
+  .glass-card,
+  .testimonial-card {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* Safety net so nothing can trigger the mobile auto-zoom again */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* ── Shop page: stack filters + products on mobile ── */
+@media (max-width: 767px) {
+  .shop-layout {
+    grid-template-columns: 1fr;   /* filters on top, products below */
+    gap: var(--space-6);
+  }
+
+  /* Make sure filter sidebar & product grid never exceed the screen */
+  .shop-sidebar,
+  .shop-layout > * {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;                 /* prevents grid blowout */
+  }
+
+  /* Product grid stays 2 columns but fits within the screen */
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+}
+
+/* ── Mobile: hide filters, show only when toggled ── */
+@media (max-width: 767px) {
+  /* Stack shop layout */
+  .shop-layout {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+  .shop-layout > * { min-width: 0; }
+
+  /* Hide the filter sidebar by default on mobile */
+  .shop-sidebar {
+    display: none;
+  }
+
+  /* When toggled open, show it */
+  .shop-sidebar.is-open {
+    display: block;
+    background: var(--surface-bg, #fff);
+    border: 1px solid var(--border-default, #e2e8f0);
+    border-radius: var(--radius-lg, 12px);
+    padding: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+
+  /* The mobile "Filters" toggle button */
+  .shop-filters-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    margin-bottom: var(--space-4);
+    background: var(--color-primary-600, #4f46e5);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md, 8px);
+    font-weight: 600;
+    cursor: pointer;
+  }
+}
+
+/* Hide the toggle button on desktop (filters always visible there) */
+.shop-filters-toggle { display: none; }

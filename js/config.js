@@ -6,55 +6,55 @@ export const CONFIG = {
   APP_NAME: 'LUXE',
   APP_TAGLINE: 'Premium Shopping Experience',
   APP_VERSION: '1.0.0',
-  
+
   /* Supabase Configuration */
   SUPABASE_URL: 'https://nbjhewccwtyuqvohhfhy.supabase.co',
   SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5iamhld2Njd3R5dXF2b2hoZmh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3MDg3OTUsImV4cCI6MjA5ODI4NDc5NX0.VMzwbjvNqUVUKia8e85KlcljFN0e3PhLGmrXxqehCB4',
   USE_SUPABASE_DB: false, // Set to true once you create the products and categories tables in Supabase
 
-  /* Currency */
-  CURRENCY: 'USD',
-  CURRENCY_SYMBOL: '$',
-  LOCALE: 'en-US',
-  
-  /* Tax & Shipping */
-  TAX_RATE: 0.08,
-  FREE_SHIPPING_THRESHOLD: 100,
-  STANDARD_SHIPPING: 9.99,
-  EXPRESS_SHIPPING: 19.99,
-  
+  /* Currency — INDIAN RUPEES */
+  CURRENCY: 'INR',
+  CURRENCY_SYMBOL: '₹',
+  LOCALE: 'en-IN',
+
+  /* Tax & Shipping (values adjusted for INR) */
+  TAX_RATE: 0.18,                 // 18% GST
+  FREE_SHIPPING_THRESHOLD: 999,
+  STANDARD_SHIPPING: 49,
+  EXPRESS_SHIPPING: 149,
+
   /* Pagination */
   PRODUCTS_PER_PAGE: 12,
-  
+
   /* Search */
   SEARCH_DEBOUNCE_MS: 300,
   SEARCH_MIN_CHARS: 2,
   MAX_RECENT_SEARCHES: 5,
-  
+
   /* Cart */
   MAX_QUANTITY: 10,
   MIN_QUANTITY: 1,
-  
+
   /* Compare */
   MAX_COMPARE_ITEMS: 4,
-  
+
   /* Toast */
   TOAST_DURATION: 4000,
-  
+
   /* Carousel */
   HERO_AUTOPLAY_INTERVAL: 5000,
-  
+
   /* Countdown (Flash Sale ends in 24h from now) */
   FLASH_SALE_HOURS: 24,
-  
+
   /* Recently Viewed */
   MAX_RECENT_VIEWED: 10,
-  
+
   /* Coupon Codes (mock) */
   COUPONS: {
     'WELCOME10': { discount: 0.10, type: 'percentage', label: '10% Off' },
     'SAVE20': { discount: 0.20, type: 'percentage', label: '20% Off' },
-    'FLAT15': { discount: 15, type: 'fixed', label: '$15 Off' },
+    'FLAT15': { discount: 1500, type: 'fixed', label: '₹1500 Off' },
     'FREESHIP': { discount: 0, type: 'shipping', label: 'Free Shipping' }
   },
 
@@ -107,9 +107,9 @@ export const CONFIG = {
 
   /* Contact Info */
   CONTACT: {
-    phone: '+1 (555) 123-4567',
+    phone: '+91 98765 43210',
     email: 'hello@luxe.com',
-    address: '123 Fashion Avenue, New York, NY 10001',
-    hours: 'Mon–Fri: 9AM–6PM EST'
+    address: '123 Fashion Avenue, Mumbai, MH 400001',
+    hours: 'Mon–Fri: 9AM–6PM IST'
   }
 };

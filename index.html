@@ -1,4 +1,3 @@
-
 <html lang="en" data-theme="light"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
@@ -35,6 +34,25 @@
   <link rel="stylesheet" href="css/utilities.css?v=2">
   <link rel="stylesheet" href="css/responsive.css?v=2">
   <link rel="stylesheet" href="css/inline.css?v=2">
+
+  <!-- ================================================================= -->
+  <!-- LUXE OVERRIDES: fix unreadable headings                            -->
+  <!-- (Modal is NO LONGER hidden — it now opens on purchase actions.)    -->
+  <!-- ================================================================= -->
+  <style id="luxe-overrides">
+    /* Make the early-access headings fully legible on the dark card */
+    .luxe-eam__title,
+    .luxe-ea__title {
+      color: #f8fafc !important;
+      -webkit-text-fill-color: #f8fafc;
+    }
+    .luxe-eam__title span,
+    .luxe-ea__title span {
+      color: #d4af37 !important;            /* gold accent */
+      -webkit-text-fill-color: #d4af37;
+    }
+    .luxe-eam__sub { color: #cbd5e1 !important; }
+  </style>
 
   <!-- Supabase JS Library -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -117,7 +135,7 @@
         <div class="search-bar hide-on-mobile">
           <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
           <input type="text" class="search-bar__input" id="search-input" placeholder="Search products, brands..." aria-label="Search products" autocomplete="off">
-          
+
           <!-- Search Dropdown -->
           <div class="search-dropdown" id="search-dropdown" role="listbox">
             <!-- Populated by JS -->
@@ -185,7 +203,7 @@
         <a href="/shop?category=Beauty" class="mobile-drawer__link">Beauty</a>
         <a href="/collections" class="mobile-drawer__link" data-nav-link="">Collections</a>
       </nav>
-      
+
       <div style="margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid var(--border-default);">
         <a href="/wishlist" class="mobile-drawer__link" data-nav-link="">
           <svg style="width: 20px; height: 20px; margin-right: 12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
@@ -209,7 +227,7 @@
   </main>
 
   <!-- ============================================================= -->
-  <!-- EARLY ACCESS FORM SECTION                                      -->
+  <!-- EARLY ACCESS SECTION (kept at the end of the page)            -->
   <!-- ============================================================= -->
   <section class="luxe-early-access" id="early-access">
     <div class="luxe-ea__inner">
@@ -320,7 +338,8 @@
   </button>
 
   <!-- ============================================================= -->
-  <!-- EARLY ACCESS GATE MODAL — pops up on ANY button/link click     -->
+  <!-- EARLY ACCESS GATE MODAL — now pops up ONLY on purchase actions -->
+  <!-- (Add to Cart / Buy / Checkout). Asks name + email, sends email.-->
   <!-- ============================================================= -->
   <div class="luxe-eam" id="luxe-eam-modal" role="dialog" aria-modal="true" aria-label="Early access sign up">
     <div class="luxe-eam__card">
@@ -328,19 +347,21 @@
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"></path></svg>
       </button>
       <span class="luxe-eam__badge">★ Early Access Only</span>
-      <h2 class="luxe-eam__title">LUXE is in <span>early access</span></h2>
-      <p class="luxe-eam__sub">We're not fully open yet. Drop your details to unlock your first experience.</p>
+      <h2 class="luxe-eam__title">This is an <span>early access</span> product</h2>
+      <p class="luxe-eam__sub" id="luxe-eam-sub">We're not fully open for purchases yet. Drop your details and we'll email you your early-access invite to unlock it.</p>
       <form class="luxe-eam__form" id="luxe-eam-form" novalidate="">
         <input type="text" class="luxe-eam__input" id="luxe-eam-name" placeholder="Your name" aria-label="Your name" required="">
         <input type="email" class="luxe-eam__input" id="luxe-eam-email" placeholder="Your email address" aria-label="Your email address" required="">
-        <button type="submit" class="luxe-eam__btn">Get Early Access</button>
+        <button type="submit" class="luxe-eam__btn">Reserve Early Access</button>
       </form>
       <div class="luxe-eam__msg" id="luxe-eam-msg" role="status" aria-live="polite"></div>
     </div>
   </div>
 
   <!-- ============================================================= -->
-  <!-- EMAILJS INTEGRATION (Early Access + Modal + Newsletter)        -->
+  <!-- EMAILJS INTEGRATION                                           -->
+  <!-- Handles: Early Access section, Newsletter, and the Gate modal -->
+  <!-- Also exposes window.LUXE_openGate() used by inline.js          -->
   <!-- ============================================================= -->
   <script>
     (function () {
@@ -348,10 +369,8 @@
       var EMAILJS_PUBLIC_KEY = "FLJeupFdNP96fqEwy";
       var EMAILJS_SERVICE_ID = "service_24mmvak";
       var EMAILJS_TEMPLATE_ID = "template_azhcjwl";
-      // If you create a dedicated newsletter template, set its ID here:
       var EMAILJS_NEWSLETTER_TEMPLATE_ID = "template_azhcjwl";
 
-      // Initialize EmailJS (v4 syntax)
       if (window.emailjs && typeof emailjs.init === "function") {
         emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
       }
@@ -360,14 +379,12 @@
       function isValidEmail(email) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
       }
-
       function setMsg(el, text, type) {
         if (!el) return;
         el.textContent = text;
         el.classList.remove("is-error", "is-success");
         if (type) el.classList.add("is-" + type);
       }
-
       function lockButton(btn, locked, busyLabel) {
         if (!btn) return;
         if (locked) {
@@ -379,6 +396,46 @@
           if (btn.dataset.originalLabel) btn.textContent = btn.dataset.originalLabel;
         }
       }
+      function save(key, data) {
+        try { localStorage.setItem(key, JSON.stringify(data)); } catch (e) {}
+      }
+
+      // =========================================================
+      // MODAL: open / close (exposed for inline.js purchase gate)
+      // =========================================================
+      var modal    = document.getElementById("luxe-eam-modal");
+      var card     = modal ? modal.querySelector(".luxe-eam__card") : null;
+      var closeBtn = document.getElementById("luxe-eam-close");
+      var modalNm  = document.getElementById("luxe-eam-name");
+      var subEl    = document.getElementById("luxe-eam-sub");
+      var defaultSub = subEl ? subEl.textContent : "";
+
+      function openGate(productName) {
+        if (!modal) return;
+        if (subEl) {
+          subEl.textContent = productName
+            ? "\u201C" + productName + "\u201D is an early-access product. Drop your details and we\u2019ll email your invite to unlock it."
+            : defaultSub;
+        }
+        modal.classList.add("is-open");
+        document.body.style.overflow = "hidden";
+        setTimeout(function () { if (modalNm) modalNm.focus(); }, 60);
+      }
+      function closeGate() {
+        if (!modal) return;
+        modal.classList.remove("is-open");
+        document.body.style.overflow = "";
+      }
+      window.LUXE_openGate = openGate;
+      window.LUXE_closeGate = closeGate;
+
+      if (closeBtn) closeBtn.addEventListener("click", closeGate);
+      if (modal) modal.addEventListener("click", function (e) {
+        if (card && !card.contains(e.target)) closeGate();
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && modal && modal.classList.contains("is-open")) closeGate();
+      });
 
       // =========================================================
       // 1) EARLY ACCESS (inline section form)
@@ -387,106 +444,68 @@
       if (eaForm) {
         eaForm.addEventListener("submit", function (e) {
           e.preventDefault();
-
-          var section = document.getElementById("early-access");
-          var nameInput = document.getElementById("luxe-ea-name");
+          var section    = document.getElementById("early-access");
+          var nameInput  = document.getElementById("luxe-ea-name");
           var emailInput = document.getElementById("luxe-ea-email");
-          var msg = document.getElementById("luxe-ea-msg");
-          var submitBtn = eaForm.querySelector(".luxe-ea__btn");
+          var msg        = document.getElementById("luxe-ea-msg");
+          var submitBtn  = eaForm.querySelector(".luxe-ea__btn");
 
-          var name = nameInput ? nameInput.value.trim() : "";
+          var name  = nameInput ? nameInput.value.trim() : "";
           var email = emailInput ? emailInput.value.trim() : "";
 
           setMsg(msg, "");
-
-          if (!name) {
-            setMsg(msg, "Please enter your name.", "error");
-            return;
-          }
-          if (!isValidEmail(email)) {
-            setMsg(msg, "Please enter a valid email address.", "error");
-            return;
-          }
+          if (!name) { setMsg(msg, "Please enter your name.", "error"); return; }
+          if (!isValidEmail(email)) { setMsg(msg, "Please enter a valid email address.", "error"); return; }
 
           lockButton(submitBtn, true, "Sending…");
-
-          emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-            user_name: name,
-            email: email
-          })
-          .then(function () {
-            if (section) section.classList.add("luxe-ea--done");
-            setMsg(
-              msg,
-              "🎉 You're on the list, " + name + "! Check your inbox for your exclusive LUXE invitation.",
-              "success"
-            );
-            eaForm.reset();
-          })
-          .catch(function (error) {
-            console.error("EmailJS (early access) error:", error);
-            setMsg(msg, "Something went wrong. Please try again.", "error");
-          })
-          .finally(function () {
-            lockButton(submitBtn, false);
-          });
+          emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { user_name: name, email: email })
+            .then(function () {
+              save("luxe_early_access", { name: name, email: email, at: Date.now() });
+              if (section) section.classList.add("luxe-ea--done");
+              setMsg(msg, "🎉 You're on the list, " + name + "! Check your inbox for your exclusive LUXE invitation.", "success");
+              eaForm.reset();
+            })
+            .catch(function (error) {
+              console.error("EmailJS (early access) error:", error);
+              setMsg(msg, "Something went wrong. Please try again.", "error");
+            })
+            .finally(function () { lockButton(submitBtn, false); });
         });
       }
 
       // =========================================================
-      // 2) EARLY ACCESS GATE MODAL
+      // 2) EARLY ACCESS GATE MODAL (triggered by purchase actions)
       // =========================================================
       var modalForm = document.getElementById("luxe-eam-form");
       if (modalForm) {
         modalForm.addEventListener("submit", function (e) {
           e.preventDefault();
-
-          var modal = document.getElementById("luxe-eam-modal");
-          var nameInput = document.getElementById("luxe-eam-name");
+          var nameInput  = document.getElementById("luxe-eam-name");
           var emailInput = document.getElementById("luxe-eam-email");
-          var msg = document.getElementById("luxe-eam-msg");
-          var submitBtn = modalForm.querySelector(".luxe-eam__btn");
-          var closeBtn = document.getElementById("luxe-eam-close");
+          var msg        = document.getElementById("luxe-eam-msg");
+          var submitBtn  = modalForm.querySelector(".luxe-eam__btn");
 
-          var name = nameInput ? nameInput.value.trim() : "";
+          var name  = nameInput ? nameInput.value.trim() : "";
           var email = emailInput ? emailInput.value.trim() : "";
 
           setMsg(msg, "");
-
-          if (!name) {
-            setMsg(msg, "Please enter your name.", "error");
-            return;
-          }
-          if (!isValidEmail(email)) {
-            setMsg(msg, "Please enter a valid email address.", "error");
-            return;
-          }
+          if (!name) { setMsg(msg, "Please enter your name.", "error"); return; }
+          if (!isValidEmail(email)) { setMsg(msg, "Please enter a valid email address.", "error"); return; }
 
           lockButton(submitBtn, true, "Sending…");
-
-          emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-            user_name: name,
-            email: email
-          })
-          .then(function () {
-            if (modal) modal.classList.add("luxe-eam--done");
-            setMsg(msg, "🎉 You're on the list, " + name + "! Check your inbox.", "success");
-            modalForm.reset();
-            setTimeout(function () {
-              if (closeBtn) {
-                closeBtn.click();
-              } else if (modal) {
-                modal.classList.remove("is-open", "luxe-eam--open");
-              }
-            }, 2500);
-          })
-          .catch(function (error) {
-            console.error("EmailJS (modal) error:", error);
-            setMsg(msg, "Unable to send invitation email.", "error");
-          })
-          .finally(function () {
-            lockButton(submitBtn, false);
-          });
+          emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, { user_name: name, email: email })
+            .then(function () {
+              save("luxe_early_access", { name: name, email: email, at: Date.now() });
+              if (modal) modal.classList.add("luxe-eam--done");
+              setMsg(msg, "🎉 You're on the list, " + name + "! Check your inbox for your early-access invite.", "success");
+              modalForm.reset();
+              setTimeout(closeGate, 2500);
+            })
+            .catch(function (error) {
+              console.error("EmailJS (modal) error:", error);
+              setMsg(msg, "Unable to send your invite. Please try again.", "error");
+            })
+            .finally(function () { lockButton(submitBtn, false); });
         });
       }
 
@@ -497,43 +516,32 @@
       if (nlForm) {
         nlForm.addEventListener("submit", function (e) {
           e.preventDefault();
-
           var emailInput = document.getElementById("luxe-nl-email");
-          var msg = document.getElementById("luxe-nl-msg");
-          var submitBtn = nlForm.querySelector(".luxe-nl__btn");
+          var msg        = document.getElementById("luxe-nl-msg");
+          var submitBtn  = nlForm.querySelector(".luxe-nl__btn");
 
           var email = emailInput ? emailInput.value.trim() : "";
-
           setMsg(msg, "");
-
-          if (!isValidEmail(email)) {
-            setMsg(msg, "Please enter a valid email address.", "error");
-            return;
-          }
+          if (!isValidEmail(email)) { setMsg(msg, "Please enter a valid email address.", "error"); return; }
 
           lockButton(submitBtn, true, "Subscribing…");
-
-          emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_NEWSLETTER_TEMPLATE_ID, {
-            user_name: "Subscriber",
-            email: email
-          })
-          .then(function () {
-            setMsg(msg, "🎉 You're subscribed! Watch your inbox for LUXE updates.", "success");
-            nlForm.reset();
-          })
-          .catch(function (error) {
-            console.error("EmailJS (newsletter) error:", error);
-            setMsg(msg, "Something went wrong. Please try again.", "error");
-          })
-          .finally(function () {
-            lockButton(submitBtn, false);
-          });
+          emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_NEWSLETTER_TEMPLATE_ID, { user_name: "Subscriber", email: email })
+            .then(function () {
+              save("luxe_newsletter", { email: email, at: Date.now() });
+              setMsg(msg, "🎉 You're subscribed! Watch your inbox for LUXE updates.", "success");
+              nlForm.reset();
+            })
+            .catch(function (error) {
+              console.error("EmailJS (newsletter) error:", error);
+              setMsg(msg, "Something went wrong. Please try again.", "error");
+            })
+            .finally(function () { lockButton(submitBtn, false); });
         });
       }
     })();
   </script>
 
-  <!-- Inline Scripts (extracted to external file) -->
+  <!-- Inline Scripts (purchase gate + cleanup) -->
   <script src="js/inline.js"></script>
 
   <!-- Application Script (ES Module) -->
